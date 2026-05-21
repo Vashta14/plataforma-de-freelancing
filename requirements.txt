@@ -1,0 +1,6 @@
+# Project dependencies
+Django>=4.2,<5
+gunicorn
+# Add any other dependencies used by the project below
+# e.g. django-unfold or unfold if required by settings.INSTALLED_APPS
+django-unfold
