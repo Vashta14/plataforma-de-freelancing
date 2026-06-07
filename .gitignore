@@ -1,6 +1,7 @@
 # Python
 __pycache__/
 *.py[cod]
+*.pyc
 *$py.class
 *.so
 .Python
@@ -47,4 +48,10 @@ db.sqlite3-journal
 /media
 /staticfiles
 /static
+
+# Ignora migrations
+**/migrations/*
+!**/migrations/__init__.py
+
+
 

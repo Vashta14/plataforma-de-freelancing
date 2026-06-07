@@ -32,6 +32,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "unfold",
+    "tailwind",
+    "theme",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -128,3 +130,11 @@ UNFOLD = {
     "SITE_SUBHEADER": "Gestão de freelancers",
     "SITE_SYMBOL": "dashboard",
 }
+
+TAILWIND_APP_NAME = "theme"
+
+if DEBUG:
+    INSTALLED_APPS += ["django_browser_reload"]
+    MIDDLEWARE += [
+        "django_browser_reload.middleware.BrowserReloadMiddleware",
+    ]
