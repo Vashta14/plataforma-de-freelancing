@@ -144,7 +144,7 @@
           <label for="dashboardSearch" class="text-xs font-bold uppercase tracking-[0.3em] text-[#7C3AED]">Busca</label>
           {% if status_filter %}<input type="hidden" name="status" value="{{ status_filter }}">{% endif %}
           <div class="mt-3 flex gap-2">
-            <input id="dashboardSearch" name="q" value="{{ search_query }}" type="search" placeholder="Buscar meus serviços" class="min-w-0 flex-1 rounded-2xl border border-[#E9D5FF] bg-white px-4 py-3 text-sm outline-none focus:border-[#7C3AED] focus:ring-4 focus:ring-[#7C3AED]/10">
+            <input id="dashboardSearch" name="q" value="{{ search_query }}" type="search" placeholder="Buscar meus serviços" class="min-w-0 flex-1 rounded-2xl border w-full border-[#E9D5FF] bg-white px-4 py-3 text-sm outline-none focus:border-[#7C3AED] focus:ring-4 focus:ring-[#7C3AED]/10">
             <button type="submit" class="rounded-2xl bg-[#7C3AED] px-4 py-3 text-sm font-bold text-white hover:bg-[#6D28D9]" aria-label="Buscar serviços">Buscar</button>
           </div>
           {% if search_query %}

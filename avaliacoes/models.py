@@ -21,7 +21,7 @@ class Avaliacao(models.Model):
     )
     
     nota = models.PositiveSmallIntegerField(
-        choices=[(i, i) for i in range(1, 11)]
+        choices=[(i, i) for i in range(1, 6)]
     )
     comentario = models.TextField(blank=True, null=True)
     criado_em = models.DateTimeField(auto_now_add=True)

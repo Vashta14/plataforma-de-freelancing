@@ -8,7 +8,7 @@ class CriarServicoForm(forms.ModelForm):
     data_hora = forms.DateTimeField(
         widget=forms.DateTimeInput(attrs={
             'type': 'datetime-local',
-            'class': 'w-full rounded-xl border border-purple-300 px-4 py-3 focus:border-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-200 text-base',
+            'class': 'w-full rounded-xl border min-w-0 border-purple-300 px-4 py-3 focus:border-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-200 text-base',
             'style': 'cursor: pointer; font-size: 16px;',
         }),
         label='Data e Hora do Serviço',

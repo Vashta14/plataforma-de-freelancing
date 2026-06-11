@@ -25,7 +25,10 @@ SECRET_KEY = 'django-insecure-vwt5uu6z8r^oybqem@13(j268jg0o)3ls2@y&rh3_+%sxuj9k8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+
+if DEBUG:
+    ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -110,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
 TIME_ZONE = 'UTC'
 
@@ -132,6 +135,18 @@ UNFOLD = {
 }
 
 TAILWIND_APP_NAME = "theme"
+NPM_BIN_PATH = r"C:\nvm4w\nodejs\npm.cmd"
+
+# CSRF and Session Configuration
+CSRF_COOKIE_SECURE = False  # Set to True in production with HTTPS
+CSRF_COOKIE_HTTPONLY = False  # Must be False to allow JS access if needed
+CSRF_COOKIE_AGE = 31449600  # One year
+CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_AGE = 1209600  # Two weeks
+SESSION_COOKIE_SECURE = False  # Set to True in production with HTTPS
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8000', 'http://localhost:8000']
 
 # CSRF and Session Configuration
 CSRF_COOKIE_SECURE = False  # Set to True in production with HTTPS

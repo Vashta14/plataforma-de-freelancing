@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Encontrar Serviços — FreelaHub{% endblock %}
+{% block content %}
+<div class="mx-auto w-full px-2 py-4 sm:px-4 lg:px-6">
+  <div><p class="text-xs font-bold uppercase tracking-[0.35em] text-[#7C3AED]">Oportunidades</p><h1 class="mt-3 text-3xl font-bold text-slate-900 sm:text-4xl">Encontrar Serviços</h1><p class="mt-2 text-slate-500">Explore serviços abertos e encontre projetos alinhados ao seu perfil.</p></div>
+
+  <form method="get" class="mt-8 grid gap-4 rounded-[1.5rem] border border-purple-100 bg-white p-5 shadow-sm md:grid-cols-2 xl:grid-cols-6">
+    <input name="q" value="{{ palavra }}" placeholder="Palavra-chave" class="rounded-2xl border border-purple-200 px-4 py-3 outline-none focus:border-purple-500 xl:col-span-2">
+    <input name="empresa" value="{{ empresa_filtro }}" placeholder="Empresa" class="rounded-2xl border border-purple-200 px-4 py-3 outline-none focus:border-purple-500">
+    <input name="valor_maximo" value="{{ valor_maximo }}" type="number" min="0" step="0.01" placeholder="Valor máximo" class="rounded-2xl border border-purple-200 px-4 py-3 outline-none focus:border-purple-500">
+    <input name="data" value="{{ data_filtro }}" type="date" class="rounded-2xl border border-purple-200 px-4 py-3 outline-none focus:border-purple-500">
+    <select name="ordenacao" class="rounded-2xl border border-purple-200 px-4 py-3 outline-none focus:border-purple-500">
+      <option value="recentes" {% if ordenacao == 'recentes' %}selected{% endif %}>Mais recentes</option>
+      <option value="maior_valor" {% if ordenacao == 'maior_valor' %}selected{% endif %}>Maior valor</option>
+      <option value="menor_valor" {% if ordenacao == 'menor_valor' %}selected{% endif %}>Menor valor</option>
+    </select>
+    <div class="flex gap-3 md:col-span-2 xl:col-span-6 xl:justify-end"><a href="{% url 'encontrar_servicos' %}" class="rounded-2xl border border-purple-200 px-5 py-3 text-sm font-bold text-slate-600 flex justify-center items-center">Limpar</a><button class="rounded-2xl bg-[#7C3AED] px-6 py-3 text-sm font-bold text-white">Aplicar filtros</button></div>
+  </form>
+
+  {% if servicos %}
+  <div class="mt-8 grid gap-6 md:grid-cols-2 2xl:grid-cols-3">
+    {% for servico in servicos %}
+    <article class="flex flex-col rounded-[1.5rem] border border-purple-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+      <div class="flex items-start justify-between gap-4"><div><p class="text-xs font-bold uppercase tracking-[0.25em] text-emerald-600">Disponível</p><h2 class="mt-3 text-xl font-bold text-slate-900">{{ servico.nome }}</h2></div><span class="rounded-full bg-[#F3E8FF] px-3 py-1 text-xs font-bold text-[#7C3AED]">{{ servico.duracao }}</span></div>
+      <p class="mt-4 line-clamp-3 flex-1 leading-7 text-slate-600">{{ servico.descricao|truncatewords:25 }}</p>
+      <dl class="mt-5 grid grid-cols-2 gap-3 text-sm"><div><dt class="text-slate-400">Empresa</dt><dd class="mt-1 font-semibold text-slate-700">{{ servico.empresa.user.get_full_name|default:servico.empresa.user.username }}</dd></div><div><dt class="text-slate-400">Data</dt><dd class="mt-1 font-semibold text-slate-700">{{ servico.data_hora|date:'d/m/Y H:i' }}</dd></div><div><dt class="text-slate-400">Valor/h</dt><dd class="mt-1 font-bold text-[#7C3AED]">R$ {{ servico.valor_hora }}</dd></div><div><dt class="text-slate-400">Candidatos</dt><dd class="mt-1 font-semibold text-slate-700">{{ servico.total_candidatos }}</dd></div></dl>
+      <div class="mt-6 grid grid-cols-2 gap-3"><a href="{% url 'detalhe_servico_freelancer' servico.id %}" class="rounded-2xl border border-purple-200 px-4 py-3 text-center text-sm font-bold text-[#7C3AED]">Ver detalhes</a>{% if servico.candidatura_atual %}<span class="rounded-2xl bg-emerald-50 px-4 py-3 text-center text-sm font-bold text-emerald-700">Já candidatado</span>{% else %}<form method="post" action="{% url 'candidatar_servico' servico.id %}">{% csrf_token %}<button class="h-full w-full rounded-2xl bg-[#7C3AED] px-4 py-3 text-sm font-bold text-white">Candidatar-se</button></form>{% endif %}</div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="mt-8 rounded-[1.5rem] border border-dashed border-purple-200 bg-purple-50 p-12 text-center"><h2 class="text-xl font-bold text-slate-900">Nenhum serviço disponível</h2><p class="mt-2 text-slate-600">Ajuste os filtros ou volte mais tarde para novas oportunidades.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% if candidaturas %}
+<div class="overflow-hidden rounded-[1.5rem] border border-purple-100 bg-white shadow-sm">
+  <div class="overflow-x-auto">
+    <table class="min-w-full text-sm">
+      <thead class="bg-[#F3E8FF] text-slate-700">
+        <tr>
+          <th class="px-6 py-4 text-left font-bold">Serviço</th>
+          <th class="px-6 py-4 text-left font-bold">Empresa</th>
+          <th class="px-6 py-4 text-left font-bold">Data</th>
+          <th class="px-6 py-4 text-left font-bold">Valor por hora</th>
+          <th class="px-6 py-4 text-left font-bold">Status</th>
+          <th class="px-6 py-4 text-right font-bold">Ação</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-purple-100">
+        {% for candidatura in candidaturas %}
+        <tr class="transition hover:bg-purple-50/50">
+          <td class="px-6 py-5 font-bold text-slate-900">{{ candidatura.vaga.nome }}</td>
+          <td class="px-6 py-5 text-slate-600">{{ candidatura.vaga.empresa.user.get_full_name|default:candidatura.vaga.empresa.user.username }}</td>
+          <td class="whitespace-nowrap px-6 py-5 text-slate-600">{{ candidatura.vaga.data_hora|date:'d/m/Y H:i' }}</td>
+          <td class="whitespace-nowrap px-6 py-5 font-semibold text-slate-900">R$ {{ candidatura.vaga.valor_hora }}</td>
+          <td class="px-6 py-5">
+            <span class="inline-flex rounded-full px-3 py-1 text-xs font-bold {% if candidatura.status == 'aceita' %}bg-emerald-100 text-emerald-700{% elif candidatura.status == 'rejeitada' %}bg-rose-100 text-rose-700{% else %}bg-amber-100 text-amber-700{% endif %}">
+              {{ candidatura.get_status_display }}
+            </span>
+          </td>
+          <td class="px-6 py-5 text-right">
+            <a href="{% url 'detalhe_servico_freelancer' candidatura.vaga.id %}" class="inline-flex rounded-xl border border-purple-200 px-4 py-2 text-xs font-bold text-[#7C3AED] hover:bg-[#F3E8FF]">Ver detalhes</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="rounded-[1.5rem] border border-dashed border-purple-200 bg-purple-50/60 p-10 text-center">
+  <h3 class="text-lg font-bold text-slate-900">Nenhuma candidatura encontrada</h3>
+  <p class="mt-2 text-slate-600">Explore os serviços disponíveis e encontre sua próxima oportunidade.</p>
+  <a href="{% url 'encontrar_servicos' %}" class="mt-5 inline-flex rounded-2xl bg-[#7C3AED] px-5 py-3 text-sm font-bold text-white hover:bg-[#6D28D9]">Encontrar serviços</a>
+</div>
+{% endif %}

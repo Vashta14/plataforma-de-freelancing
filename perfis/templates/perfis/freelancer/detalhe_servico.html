@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}{{ servico.nome }} — FreelaHub{% endblock %}
+{% block content %}
+<div class="mx-auto w-full px-2 py-4 sm:px-4 lg:px-6">
+  <a href="{% url 'encontrar_servicos' %}" class="text-sm font-bold text-[#7C3AED]">← Voltar para serviços</a>
+  <div class="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
+    <article class="rounded-[2rem] border border-purple-100 bg-white p-6 shadow-sm sm:p-8">
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between"><div><span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700">{{ servico.get_status_display }}</span><h1 class="mt-4 text-3xl font-bold text-slate-900">{{ servico.nome }}</h1><p class="mt-2 text-slate-500">Publicado por {{ servico.empresa.user.get_full_name|default:servico.empresa.user.username }}</p></div><p class="text-3xl font-bold text-[#7C3AED]">R$ {{ servico.valor_hora }}<span class="text-sm font-semibold text-slate-400">/h</span></p></div>
+      <div class="mt-8"><h2 class="text-lg font-bold text-slate-900">Descrição completa</h2><p class="mt-3 whitespace-pre-line leading-8 text-slate-600">{{ servico.descricao }}</p></div>
+      <dl class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"><div class="rounded-2xl bg-slate-50 p-4"><dt class="text-xs font-bold uppercase text-slate-400">Data e hora</dt><dd class="mt-2 font-semibold text-slate-800">{{ servico.data_hora|date:'d/m/Y H:i' }}</dd></div><div class="rounded-2xl bg-slate-50 p-4"><dt class="text-xs font-bold uppercase text-slate-400">Duração</dt><dd class="mt-2 font-semibold text-slate-800">{{ servico.duracao }}</dd></div><div class="rounded-2xl bg-slate-50 p-4"><dt class="text-xs font-bold uppercase text-slate-400">Candidatos</dt><dd class="mt-2 font-semibold text-slate-800">{{ servico.total_candidatos }}</dd></div><div class="rounded-2xl bg-slate-50 p-4"><dt class="text-xs font-bold uppercase text-slate-400">Empresa</dt><dd class="mt-2 font-semibold text-slate-800">{{ servico.empresa }}</dd></div></dl>
+    </article>
+    <aside class="rounded-[2rem] border border-purple-100 bg-[#F9F5FF] p-6 shadow-sm">
+      {% if candidatura %}
+        <p class="text-xs font-bold uppercase tracking-[0.25em] text-[#7C3AED]">Sua candidatura</p>
+        <h2 class="mt-3 text-2xl font-bold text-slate-900">Você já se candidatou</h2>
+        <span class="mt-5 inline-flex rounded-full px-4 py-2 text-sm font-bold {% if candidatura.status == 'aceita' %}bg-emerald-100 text-emerald-700{% elif candidatura.status == 'rejeitada' %}bg-rose-100 text-rose-700{% else %}bg-amber-100 text-amber-700{% endif %}">{{ candidatura.get_status_display }}</span>
+        {% if candidatura.status == 'aceita' %}<div class="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-emerald-700"><p class="font-bold">Parabéns! Sua candidatura foi aceita.</p><p class="mt-2 text-sm">A empresa poderá entrar em contato pelos dados do seu perfil.</p></div>{% endif %}
+        {% if candidatura.status == 'aceita' and servico.status == 'finalizado' %}
+          {% if avaliacao_empresa %}
+            <div class="mt-6 rounded-2xl border border-purple-200 bg-white p-5">
+              <p class="text-sm font-bold text-slate-900">Sua avaliação da empresa</p>
+              <div class="mt-2">{% include 'components/rating_stars.html' with nota=avaliacao_empresa.nota show_value=True %}</div>
+            </div>
+          {% else %}
+            <a href="{% url 'avaliar_empresa' servico.id %}" class="mt-6 inline-flex w-full justify-center rounded-2xl bg-[#7C3AED] px-5 py-3 text-sm font-bold text-white hover:bg-[#6D28D9]">Avaliar empresa</a>
+          {% endif %}
+        {% endif %}
+      {% elif servico.status == 'aberta' %}
+        <p class="text-xs font-bold uppercase tracking-[0.25em] text-[#7C3AED]">Tem interesse?</p><h2 class="mt-3 text-2xl font-bold text-slate-900">Candidate-se ao projeto</h2><p class="mt-3 leading-7 text-slate-600">Envie sua candidatura para demonstrar interesse nesta oportunidade.</p><form method="post" action="{% url 'candidatar_servico' servico.id %}" class="mt-6">{% csrf_token %}<button class="w-full rounded-2xl bg-[#7C3AED] px-5 py-3 font-bold text-white hover:bg-[#6D28D9]">Candidatar-se</button></form>
+      {% endif %}
+    </aside>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}Avaliar Freelancer — FreelaHub{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-3xl px-6 py-16 lg:px-8">
+  <a href="{% url 'detalhe_servico' servico.id %}" class="text-purple-600 hover:text-purple-900">← Voltar para serviço</a>
+
+  {% if already_evaluated %}
+    <div class="mt-8 rounded-3xl border border-red-200 bg-red-50 p-8 text-center">
+      <h2 class="text-2xl font-bold text-red-900">Freelancer já avaliado</h2>
+      <p class="mt-3 text-red-700">Este freelancer já foi avaliado para este serviço e não pode ser avaliado novamente.</p>
+      <a href="{% url 'detalhe_servico' servico.id %}" class="mt-6 inline-flex rounded-full bg-red-600 px-6 py-2 text-white hover:bg-red-500">Voltar ao serviço</a>
+    </div>
+  {% else %}
+    <div class="mt-8 rounded-3xl border border-purple-200 bg-white p-8 shadow-2xl">
+      <h1 class="text-2xl font-bold text-purple-900">Avaliar {{ freelancer.user.get_full_name|default:freelancer.user.username }}</h1>
+      <form method="post" class="mt-6 space-y-4">
+        {% csrf_token %}
+        <div>
+          <label class="block text-sm font-semibold text-purple-900">Nota</label>
+          {{ form.nota.as_hidden }}
+          <div id="ratingStars" class="mt-2 flex gap-1 text-3xl">
+            {% for nota in nota_choices %}
+              <button type="button" class="rating-star rounded-lg px-1 text-slate-200 transition hover:text-amber-400" data-value="{{ nota }}" aria-label="{{ nota }} estrela{% if nota != 1 %}s{% endif %}">★</button>
+            {% endfor %}
+          </div>
+          {% if form.nota.errors %}<div class="mt-2 text-sm text-red-600">{{ form.nota.errors }}</div>{% endif %}
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-purple-900">Comentário</label>
+          {{ form.comentario }}
+          {% if form.comentario.errors %}<div class="text-sm text-red-600">{{ form.comentario.errors }}</div>{% endif %}
+        </div>
+
+        <div class="flex justify-between">
+          <a href="{% url 'detalhe_servico' servico.id %}" class="rounded-full border border-gray-200 px-4 py-2">Cancelar</a>
+          <button type="submit" class="rounded-full bg-purple-600 px-6 py-2 text-white">Salvar avaliação</button>
+        </div>
+      </form>
+    </div>
+  {% endif %}
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const hiddenField = document.querySelector('input[name="nota"]');
+    const stars = document.querySelectorAll('#ratingStars .rating-star');
+    const updateStars = (value) => {
+      stars.forEach(star => {
+        const starValue = Number(star.dataset.value);
+        star.classList.toggle('text-amber-400', starValue <= value);
+        star.classList.toggle('text-slate-200', starValue > value);
+      });
+    };
+
+    stars.forEach(star => {
+      star.addEventListener('click', () => {
+        const value = Number(star.dataset.value);
+        hiddenField.value = value;
+        updateStars(value);
+      });
+    });
+
+    if (hiddenField.value) {
+      updateStars(Number(hiddenField.value));
+    }
+  });
+</script>
+{% endblock %}

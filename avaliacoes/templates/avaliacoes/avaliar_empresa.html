@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Avaliar Empresa — FreelaHub{% endblock %}
+{% block content %}
+<div class="mx-auto w-full max-w-3xl px-2 py-4 sm:px-4 lg:px-6">
+  <a href="{% url 'detalhe_servico_freelancer' servico.id %}" class="text-sm font-bold text-[#7C3AED]">← Voltar ao serviço</a>
+  {% if already_evaluated %}
+    <div class="mt-8 rounded-[2rem] border border-purple-200 bg-purple-50 p-8 text-center">
+      <h1 class="text-2xl font-bold text-slate-900">Empresa já avaliada</h1>
+      <p class="mt-3 text-slate-600">Você já avaliou a empresa responsável por este serviço.</p>
+      <a href="{% url 'detalhe_servico_freelancer' servico.id %}" class="mt-6 inline-flex rounded-2xl bg-[#7C3AED] px-6 py-3 text-sm font-bold text-white">Voltar ao serviço</a>
+    </div>
+  {% else %}
+    <div class="mt-8 rounded-[2rem] border border-purple-100 bg-white p-6 shadow-sm sm:p-8">
+      <p class="text-xs font-bold uppercase tracking-[0.3em] text-[#7C3AED]">Serviço finalizado</p>
+      <h1 class="mt-3 text-3xl font-bold text-slate-900">Avaliar {{ servico.empresa.user.get_full_name|default:servico.empresa.user.username }}</h1>
+      <p class="mt-3 text-slate-600">Compartilhe como foi trabalhar com esta empresa no serviço “{{ servico.nome }}”.</p>
+      <form method="post" class="mt-8 space-y-6">
+        {% csrf_token %}
+        <div>
+          <label class="block text-sm font-bold text-slate-700">Sua nota</label>
+          {{ form.nota.as_hidden }}
+          <div id="ratingStars" class="mt-3 flex gap-1 text-4xl">
+            {% for nota in nota_choices %}
+              <button type="button" class="rating-star rounded-lg px-1 text-slate-200 transition hover:text-amber-400" data-value="{{ nota }}" aria-label="{{ nota }} estrela{% if nota != 1 %}s{% endif %}">★</button>
+            {% endfor %}
+          </div>
+          {% for error in form.nota.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+        </div>
+        <div>
+          <label class="mb-2 block text-sm font-bold text-slate-700">Comentário</label>
+          {{ form.comentario }}
+          {% for error in form.comentario.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+        </div>
+        <div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
+          <a href="{% url 'detalhe_servico_freelancer' servico.id %}" class="rounded-2xl border border-purple-200 px-6 py-3 text-center text-sm font-bold text-slate-600">Cancelar</a>
+          <button class="rounded-2xl bg-[#7C3AED] px-6 py-3 text-sm font-bold text-white">Salvar avaliação</button>
+        </div>
+      </form>
+    </div>
+  {% endif %}
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const hiddenField = document.querySelector('input[name="nota"]');
+    const stars = document.querySelectorAll('#ratingStars .rating-star');
+    const updateStars = value => stars.forEach(star => {
+      const active = Number(star.dataset.value) <= value;
+      star.classList.toggle('text-amber-400', active);
+      star.classList.toggle('text-slate-200', !active);
+    });
+    stars.forEach(star => star.addEventListener('click', () => {
+      hiddenField.value = star.dataset.value;
+      updateStars(Number(star.dataset.value));
+    }));
+    if (hiddenField && hiddenField.value) updateStars(Number(hiddenField.value));
+  });
+</script>
+{% endblock %}
