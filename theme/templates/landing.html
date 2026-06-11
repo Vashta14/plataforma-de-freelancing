@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block title %}FreelaHub — Plataforma de Freelancers{% endblock %}
+{% block content %}
+<section class="bg-purple-950 text-white">
+  <div class="mx-auto max-w-7xl px-6 py-24 lg:px-8">
+    <div class="grid gap-16 lg:grid-cols-2 lg:items-center">
+      <div class="max-w-xl">
+        <p class="text-sm uppercase tracking-[0.25em] text-purple-400">Conecte freelancers e empresas</p>
+        <h1 class="mt-6 text-4xl font-bold tracking-tight sm:text-5xl">A plataforma profissional para encontrar e oferecer serviços de freelancing.</h1>
+        <p class="mt-6 text-lg leading-8 text-purple-200">Cadastre-se como freelancer ou empresa, publique projetos e encontre talentos qualificados com um fluxo simples e ágil.</p>
+        <div class="mt-10 flex flex-col gap-3 sm:flex-row">
+          <a href="{% url 'register' 'freelancer' %}" class="inline-flex items-center justify-center rounded-full bg-purple-600 px-8 py-3 text-base font-semibold text-white shadow-lg shadow-purple-600/20 hover:bg-purple-500">Sou Freelancer</a>
+          <a href="{% url 'register' 'empresa' %}" class="inline-flex items-center justify-center rounded-full border border-purple-700 bg-purple-900 px-8 py-3 text-base font-semibold text-white hover:bg-purple-800">Sou Empresa</a>
+        </div>
+      </div>
+      <div class="relative">
+        <div class="rounded-3xl bg-purple-900/80 p-8 shadow-2xl shadow-purple-950/30 ring-1 ring-white/10">
+          <div class="space-y-6">
+            <div class="rounded-3xl bg-purple-800 p-7 shadow-lg shadow-purple-950/20">
+              <p class="text-sm font-semibold uppercase tracking-[0.24em] text-purple-300">Plataforma intuitiva</p>
+              <h2 class="mt-4 text-3xl font-bold text-white">O jeito mais simples de contratar e oferecer serviços.</h2>
+              <p class="mt-4 text-purple-200">Com painel moderno, comunicação direta e controle total dos seus projetos, você cresce com segurança e velocidade.</p>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="rounded-3xl bg-purple-950/90 p-6">
+                <p class="text-sm uppercase tracking-[0.24em] text-purple-300">Para freelas</p>
+                <p class="mt-3 text-base text-purple-200">Monte um perfil forte, exponha suas habilidades e receba propostas de empresas reais.</p>
+              </div>
+              <div class="rounded-3xl bg-purple-950/90 p-6">
+                <p class="text-sm uppercase tracking-[0.24em] text-purple-300">Para empresas</p>
+                <p class="mt-3 text-base text-purple-200">Publique oportunidades, veja talentos e contrate profissionais com segurança de ponta a ponta.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-purple-50 py-20">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="grid gap-16 lg:grid-cols-2 lg:items-center">
+      <div class="space-y-6">
+        <p class="text-sm uppercase tracking-[0.3em] text-purple-600">Benefícios</p>
+        <h2 class="text-4xl font-bold tracking-tight text-slate-900">Uma experiência completa para clientes e prestadores.</h2>
+        <p class="max-w-2xl text-lg leading-8 text-slate-600">Gestão de projetos, perfil profissional, propostas e avaliações em um único lugar. Tudo projetado para ser simples, veloz e confiável.</p>
+      </div>
+      <div class="grid gap-6 sm:grid-cols-2">
+        <div class="rounded-3xl border border-purple-200 bg-white p-8 shadow-lg shadow-purple-200/50">
+          <h3 class="text-xl font-semibold text-purple-900">Conexões qualificadas</h3>
+          <p class="mt-4 text-purple-700">Acesse freelancers especializados e descubra talentos experientes com facilidade.</p>
+        </div>
+        <div class="rounded-3xl border border-purple-200 bg-white p-8 shadow-lg shadow-purple-200/50">
+          <h3 class="text-xl font-semibold text-purple-900">Processo transparente</h3>
+          <p class="mt-4 text-purple-700">Acompanhe propostas, envie mensagens e gerencie entregas com clareza e profissionalismo.</p>
+        </div>
+        <div class="rounded-3xl border border-purple-200 bg-white p-8 shadow-lg shadow-purple-200/50">
+          <h3 class="text-xl font-semibold text-purple-900">Design responsivo</h3>
+          <p class="mt-4 text-purple-700">Uma interface moderna que funciona em desktop e mobile, com navegação fluida e acessível.</p>
+        </div>
+        <div class="rounded-3xl border border-purple-200 bg-white p-8 shadow-lg shadow-purple-200/50">
+          <h3 class="text-xl font-semibold text-purple-900">Suporte para você</h3>
+          <p class="mt-4 text-purple-700">Ferramentas intuitivas para publicar serviços e administrar seu perfil com confiança.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-purple-900 py-20 text-white">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="mb-12 max-w-2xl">
+      <p class="text-sm uppercase tracking-[0.3em] text-purple-400">Como funciona</p>
+      <h2 class="mt-4 text-4xl font-bold tracking-tight">Três passos para começar.</h2>
+    </div>
+    <div class="grid gap-6 sm:grid-cols-3">
+      <div class="rounded-3xl bg-purple-800 p-8 shadow-xl shadow-purple-950/20">
+        <span class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-purple-600 text-lg font-bold text-white">1</span>
+        <h3 class="mt-6 text-xl font-semibold">Cadastre-se</h3>
+        <p class="mt-3 text-purple-200">Escolha freelancer ou empresa e crie sua conta em poucos minutos.</p>
+      </div>
+      <div class="rounded-3xl bg-purple-800 p-8 shadow-xl shadow-purple-950/20">
+        <span class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-purple-600 text-lg font-bold text-white">2</span>
+        <h3 class="mt-6 text-xl font-semibold">Publique ou encontre</h3>
+        <p class="mt-3 text-purple-200">Anuncie um serviço ou explore projetos para receber propostas qualificadas.</p>
+      </div>
+      <div class="rounded-3xl bg-purple-800 p-8 shadow-xl shadow-purple-950/20">
+        <span class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-purple-600 text-lg font-bold text-white">3</span>
+        <h3 class="mt-6 text-xl font-semibold">Contrate com confiança</h3>
+        <p class="mt-3 text-purple-200">Gerencie entregas, converse com o freelancer e avalie o resultado final.</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

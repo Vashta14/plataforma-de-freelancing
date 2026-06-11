@@ -1,0 +1,101 @@
+<aside class="relative z-30 w-full border-b border-purple-200 bg-white px-4 py-4 shadow-sm lg:fixed lg:inset-y-0 lg:left-0 lg:w-[260px] lg:border-y-0 lg:border-l-0 lg:border-r lg:py-8 lg:shadow-[0_25px_70px_-40px_rgba(124,58,237,0.35)]">
+  <div class="flex h-full flex-col justify-between gap-8">
+    <div class="space-y-10">
+      <div class="hidden items-center gap-3 rounded-[1.75rem] bg-[#F7F0FF] p-4 shadow-sm lg:flex">
+        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#7C3AED] text-lg font-semibold text-white">F</div>
+        <div>
+          <p class="text-lg font-semibold text-slate-900">FreelaHub</p>
+          <p class="text-xs uppercase tracking-[0.32em] text-purple-600">Painel</p>
+        </div>
+      </div>
+
+      <nav class="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:block lg:space-y-2">
+        {% if request.user.perfil.tipo == 'empresa' %}
+        <a href="{% url 'dashboard_empresa' %}" class="group flex items-center gap-3 rounded-[1.5rem] px-4 py-3 text-sm font-semibold transition {% if request.resolver_match.url_name == 'dashboard_empresa' %}bg-[#F3E8FF] text-[#6D28D9] ring-1 ring-purple-200{% else %}text-slate-700 hover:bg-[#F3E8FF] hover:text-[#7C3AED]{% endif %}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-current">
+            <path d="M3 13h8V3H3v10Z"></path>
+            <path d="M13 21h8V11h-8v10Z"></path>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+
+        <a href="{% url 'lista_de_servicos' %}" class="group flex items-center gap-3 rounded-[1.5rem] px-4 py-3 text-sm font-semibold transition {% if request.resolver_match.url_name == 'lista_de_servicos' %}bg-[#F3E8FF] text-[#6D28D9] ring-1 ring-purple-200{% else %}text-slate-700 hover:bg-[#F3E8FF] hover:text-[#7C3AED]{% endif %}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-current">
+            <path d="M4 7h16M4 12h16M4 17h16"></path>
+          </svg>
+          <span>Meus Serviços</span>
+        </a>
+
+        <a href="{% url 'criar_servico' %}" class="group flex items-center gap-3 rounded-[1.5rem] px-4 py-3 text-sm font-semibold transition {% if request.resolver_match.url_name == 'criar_servico' %}bg-[#F3E8FF] text-[#6D28D9] ring-1 ring-purple-200{% else %}text-slate-700 hover:bg-[#F3E8FF] hover:text-[#7C3AED]{% endif %}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-current">
+            <path d="M12 5v14M5 12h14"></path>
+          </svg>
+          <span>Publicar Serviço</span>
+        </a>
+
+        <a href="{% url 'candidaturas' %}" class="group flex items-center gap-3 rounded-[1.5rem] px-4 py-3 text-sm font-semibold transition {% if request.resolver_match.url_name == 'candidaturas' %}bg-[#F3E8FF] text-[#6D28D9] ring-1 ring-purple-200{% else %}text-slate-700 hover:bg-[#F3E8FF] hover:text-[#7C3AED]{% endif %}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-current">
+            <path d="M4 7h16M4 12h16M4 17h16"></path>
+          </svg>
+          <span>Candidaturas</span>
+        </a>
+
+        <a href="{% url 'avaliacoes_empresa' %}" class="group flex items-center gap-3 rounded-[1.5rem] px-4 py-3 text-sm font-semibold transition {% if request.resolver_match.url_name == 'avaliacoes_empresa' %}bg-[#F3E8FF] text-[#6D28D9] ring-1 ring-purple-200{% else %}text-slate-700 hover:bg-[#F3E8FF] hover:text-[#7C3AED]{% endif %}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-current">
+            <path d="M12 20h9"></path>
+            <path d="M16 4a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"></path>
+            <path d="M4 20c0-4 4-7 8-7s8 3 8 7"></path>
+          </svg>
+          <span>Avaliações</span>
+        </a>
+
+        <a href="{% url 'perfil_empresa' %}" class="group flex items-center gap-3 rounded-[1.5rem] px-4 py-3 text-sm font-semibold transition {% if request.resolver_match.url_name == 'perfil_empresa' %}bg-[#F3E8FF] text-[#6D28D9] ring-1 ring-purple-200{% else %}text-slate-700 hover:bg-[#F3E8FF] hover:text-[#7C3AED]{% endif %}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-current">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span>Meu Perfil</span>
+        </a>
+        <a href="{% url 'configuracoes_empresa' %}" class="group flex items-center gap-3 rounded-[1.5rem] px-4 py-3 text-sm font-semibold transition {% if request.resolver_match.url_name == 'configuracoes_empresa' %}bg-[#F3E8FF] text-[#6D28D9] ring-1 ring-purple-200{% else %}text-slate-700 hover:bg-[#F3E8FF] hover:text-[#7C3AED]{% endif %}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.6v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"></path></svg>
+          <span>Configurações</span>
+        </a>
+        {% else %}
+        <a href="{% url 'dashboard_freelancer' %}" class="group flex items-center gap-3 rounded-[1.5rem] px-4 py-3 text-sm font-semibold transition {% if request.resolver_match.url_name == 'dashboard_freelancer' %}bg-[#F3E8FF] text-[#6D28D9] ring-1 ring-purple-200{% else %}text-slate-700 hover:bg-[#F3E8FF] hover:text-[#7C3AED]{% endif %}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5"><path d="M3 13h8V3H3v10ZM13 21h8V11h-8v10Z"></path></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="{% url 'encontrar_servicos' %}" class="group flex items-center gap-3 rounded-[1.5rem] px-4 py-3 text-sm font-semibold transition {% if request.resolver_match.url_name == 'encontrar_servicos' or request.resolver_match.url_name == 'detalhe_servico_freelancer' %}bg-[#F3E8FF] text-[#6D28D9] ring-1 ring-purple-200{% else %}text-slate-700 hover:bg-[#F3E8FF] hover:text-[#7C3AED]{% endif %}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+          <span>Encontrar Serviços</span>
+        </a>
+        <a href="{% url 'minhas_candidaturas' %}" class="group flex items-center gap-3 rounded-[1.5rem] px-4 py-3 text-sm font-semibold transition {% if request.resolver_match.url_name == 'minhas_candidaturas' %}bg-[#F3E8FF] text-[#6D28D9] ring-1 ring-purple-200{% else %}text-slate-700 hover:bg-[#F3E8FF] hover:text-[#7C3AED]{% endif %}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5"><path d="M4 5h16v14H4zM8 9h8M8 13h5"></path></svg>
+          <span>Minhas Candidaturas</span>
+        </a>
+        <a href="{% url 'avaliacoes_freelancer' %}" class="group flex items-center gap-3 rounded-[1.5rem] px-4 py-3 text-sm font-semibold transition {% if request.resolver_match.url_name == 'avaliacoes_freelancer' %}bg-[#F3E8FF] text-[#6D28D9] ring-1 ring-purple-200{% else %}text-slate-700 hover:bg-[#F3E8FF] hover:text-[#7C3AED]{% endif %}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z"></path></svg>
+          <span>Avaliações</span>
+        </a>
+        <a href="{% url 'habilidades_freelancer' %}" class="group flex items-center gap-3 rounded-[1.5rem] px-4 py-3 text-sm font-semibold transition {% if request.resolver_match.url_name == 'habilidades_freelancer' %}bg-[#F3E8FF] text-[#6D28D9] ring-1 ring-purple-200{% else %}text-slate-700 hover:bg-[#F3E8FF] hover:text-[#7C3AED]{% endif %}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          <span>Habilidades</span>
+        </a>
+        <a href="{% url 'perfil_freelancer' %}" class="group flex items-center gap-3 rounded-[1.5rem] px-4 py-3 text-sm font-semibold transition {% if request.resolver_match.url_name == 'perfil_freelancer' or request.resolver_match.url_name == 'editar_perfil_freelancer' %}bg-[#F3E8FF] text-[#6D28D9] ring-1 ring-purple-200{% else %}text-slate-700 hover:bg-[#F3E8FF] hover:text-[#7C3AED]{% endif %}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"></path></svg>
+          <span>Meu Perfil</span>
+        </a>
+        <a href="{% url 'configuracoes_freelancer' %}" class="group flex items-center gap-3 rounded-[1.5rem] px-4 py-3 text-sm font-semibold transition {% if request.resolver_match.url_name == 'configuracoes_freelancer' %}bg-[#F3E8FF] text-[#6D28D9] ring-1 ring-purple-200{% else %}text-slate-700 hover:bg-[#F3E8FF] hover:text-[#7C3AED]{% endif %}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.6v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"></path></svg>
+          <span>Configurações</span>
+        </a>
+        {% endif %}
+      </nav>
+    </div>
+
+    <div class="hidden rounded-[1.75rem] border border-purple-100 bg-[#F9F5FF] p-4 text-sm leading-6 text-slate-600 shadow-sm lg:block">
+      <p class="font-semibold text-purple-900">Atalhos rápidos</p>
+      <p class="mt-2">Navegue pelo painel com clareza. O menu mantém sempre suas ações principais à mão.</p>
+    </div>
+  </div>
+</aside>

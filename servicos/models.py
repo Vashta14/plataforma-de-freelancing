@@ -8,7 +8,7 @@ from django.utils import timezone
 class Servico(models.Model):
     STATUS_CHOICES = (
         ('aberta', 'Aberta'),
-        ('fechada', 'Fechada'),
+        ('finalizado', 'Finalizado'),
         ('cancelada', 'Cancelada'),
     )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

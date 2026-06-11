@@ -1,0 +1,285 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard da Empresa — {{ perfil.user.get_full_name|default:perfil.user.username }}{% endblock %}
+
+{% block content %}
+<div class="w-full px-6 py-8 sm:px-8 lg:px-10 xl:px-14">
+
+  <div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.35em] text-[#7C3AED]">Dashboard da Empresa</p>
+      <h1 class="mt-3 text-3xl font-bold text-slate-900 sm:text-4xl">
+        Olá, {{ perfil.user.get_full_name|default:perfil.user.username }}! 👋
+      </h1>
+      <p class="mt-2 text-base text-slate-500">
+        Aqui está um resumo geral da sua conta e dos seus serviços.
+      </p>
+    </div>
+
+    <a href="{% url 'criar_servico' %}" class="inline-flex items-center justify-center rounded-2xl bg-[#7C3AED] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#7C3AED]/25 transition hover:-translate-y-0.5 hover:bg-[#6D28D9]">
+      + Publicar novo serviço
+    </a>
+  </div>
+
+  <div class="grid gap-6 xl:grid-cols-[1fr_360px]">
+
+    <div class="min-w-0 space-y-6">
+
+      <div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        <div class="rounded-[1.5rem] border border-[#E9D5FF] bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg hover:shadow-[#7C3AED]/10">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F3E8FF] text-xl">📁</div>
+          <p class="mt-5 text-sm font-medium text-slate-500">Total de serviços</p>
+          <p class="mt-2 text-4xl font-bold text-slate-900">{{ total_servicos }}</p>
+          <p class="mt-2 text-sm text-slate-500">Todos os serviços publicados.</p>
+        </div>
+
+        <div class="rounded-[1.5rem] border border-[#E9D5FF] bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg hover:shadow-[#7C3AED]/10">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F3E8FF] text-xl">🚀</div>
+          <p class="mt-5 text-sm font-medium text-slate-500">Serviços abertos</p>
+          <p class="mt-2 text-4xl font-bold text-slate-900">{{ abertos }}</p>
+          <p class="mt-2 text-sm text-slate-500">Projetos em busca de talentos.</p>
+        </div>
+
+        <div class="rounded-[1.5rem] border border-[#E9D5FF] bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg hover:shadow-[#7C3AED]/10">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F3E8FF] text-xl">✅</div>
+          <p class="mt-5 text-sm font-medium text-slate-500">Finalizados</p>
+          <p class="mt-2 text-4xl font-bold text-slate-900">{{ finalizados }}</p>
+          <p class="mt-2 text-sm text-slate-500">Serviços já concluídos.</p>
+        </div>
+
+        <div class="rounded-[1.5rem] border border-[#E9D5FF] bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg hover:shadow-[#7C3AED]/10">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-100 text-xl">✖️</div>
+          <p class="mt-5 text-sm font-medium text-slate-500">Cancelados</p>
+          <p class="mt-2 text-4xl font-bold text-slate-900">{{ cancelados }}</p>
+          <p class="mt-2 text-sm text-slate-500">Serviços interrompidos.</p>
+        </div>
+      </div>
+
+      <section class="rounded-[2rem] border border-[#E9D5FF] bg-white p-6 shadow-sm">
+        <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-[0.35em] text-[#7C3AED]">Meus serviços</p>
+            <h2 class="mt-3 text-2xl font-bold text-slate-900">Sua lista de projetos</h2>
+          </div>
+
+          <div class="flex flex-wrap gap-2">
+            <a href="{% url 'dashboard_empresa' %}{% if search_query %}?q={{ search_query|urlencode }}{% endif %}" class="rounded-full border px-4 py-2 text-sm font-semibold {% if not status_filter %}bg-[#7C3AED] text-white border-[#7C3AED]{% else %}bg-white text-slate-700 border-[#E9D5FF] hover:bg-[#F3E8FF]{% endif %}">Todos</a>
+            <a href="{% url 'dashboard_empresa' %}?status=aberta{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}" class="rounded-full border px-4 py-2 text-sm font-semibold {% if status_filter == 'aberta' %}bg-emerald-100 text-emerald-700 border-emerald-200{% else %}bg-white text-slate-700 border-[#E9D5FF] hover:bg-[#F3E8FF]{% endif %}">Abertos</a>
+            <a href="{% url 'dashboard_empresa' %}?status=finalizado{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}" class="rounded-full border px-4 py-2 text-sm font-semibold {% if status_filter == 'finalizado' %}bg-[#F3E8FF] text-[#7C3AED] border-[#E9D5FF]{% else %}bg-white text-slate-700 border-[#E9D5FF] hover:bg-[#F3E8FF]{% endif %}">Finalizados</a>
+            <a href="{% url 'dashboard_empresa' %}?status=cancelada{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}" class="rounded-full border px-4 py-2 text-sm font-semibold {% if status_filter == 'cancelada' %}bg-rose-100 text-rose-700 border-rose-200{% else %}bg-white text-slate-700 border-[#E9D5FF] hover:bg-[#F3E8FF]{% endif %}">Cancelados</a>
+          </div>
+        </div>
+
+        {% if servicos %}
+        <div class="mt-7 overflow-hidden rounded-[1.5rem] border border-[#E9D5FF]">
+          <div class="overflow-x-auto">
+            <table class="min-w-full text-sm">
+              <thead class="bg-[#F3E8FF] text-slate-700">
+                <tr>
+                  <th class="px-6 py-4 text-left font-bold">Serviço</th>
+                  <th class="px-6 py-4 text-left font-bold">Descrição</th>
+                  <th class="px-6 py-4 text-left font-bold">Status</th>
+                  <th class="px-6 py-4 text-left font-bold">Candidaturas</th>
+                  <th class="px-6 py-4 text-left font-bold">Data</th>
+                  <th class="px-6 py-4 text-left font-bold">Valor/h</th>
+                </tr>
+              </thead>
+
+              <tbody class="divide-y divide-[#E9D5FF] bg-white">
+                {% for servico in servicos %}
+                <tr
+                  class="service-row cursor-pointer transition hover:bg-[#FAF5FF] focus:bg-[#FAF5FF] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#7C3AED]"
+                  data-href="{% url 'detalhe_servico' servico.id %}"
+                  tabindex="0"
+                  role="link"
+                  aria-label="Ver detalhes do serviço {{ servico.nome }}"
+                >
+                  <td class="px-6 py-5 font-semibold text-slate-900">{{ servico.nome }}</td>
+                  <td class="max-w-md px-6 py-5 text-slate-500">{{ servico.descricao|truncatewords:12 }}</td>
+                  <td class="px-6 py-5">
+                    {% if servico.status == 'aberta' %}
+                    <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700">Aberto</span>
+                    {% elif servico.status == 'finalizado' %}
+                    <span class="rounded-full bg-[#F3E8FF] px-3 py-1 text-xs font-bold text-[#7C3AED]">Finalizado</span>
+                    {% elif servico.status == 'cancelada' %}
+                    <span class="rounded-full bg-rose-100 px-3 py-1 text-xs font-bold text-rose-700">Cancelado</span>
+                    {% else %}
+                    <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700">{{ servico.get_status_display }}</span>
+                    {% endif %}
+                  </td>
+                  <td class="px-6 py-5 text-slate-700">{{ servico.total_candidaturas }}</td>
+                  <td class="px-6 py-5 text-slate-700">{{ servico.data_hora|date:'d/m/Y' }}</td>
+                  <td class="px-6 py-5 font-semibold text-slate-900">R$ {{ servico.valor_hora }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {% else %}
+        <div class="mt-8 rounded-[1.5rem] border border-dashed border-[#E9D5FF] bg-[#F8F3FF] p-10 text-center">
+          <p class="text-lg font-bold text-slate-900">Nenhum serviço encontrado.</p>
+          {% if search_query %}
+            <p class="mt-2 text-slate-500">Não encontramos resultados para “{{ search_query }}”. Tente outro termo.</p>
+          {% else %}
+            <p class="mt-2 text-slate-500">Publique um novo serviço para começar a receber candidaturas.</p>
+          {% endif %}
+        </div>
+        {% endif %}
+      </section>
+    </div>
+
+    <aside class="space-y-6">
+      <div class="rounded-[2rem] border border-[#E9D5FF] bg-[#F9F5FF] p-6 shadow-sm">
+        <div class="flex items-center gap-4">
+          <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#7C3AED] text-2xl font-bold text-white">
+            {{ perfil.user.first_name|default:perfil.user.username|slice:":1" }}
+          </div>
+          <div>
+            <p class="font-bold text-slate-900">{{ perfil.user.get_full_name|default:perfil.user.username }}</p>
+            <p class="text-sm text-slate-500">Conta Empresa</p>
+          </div>
+        </div>
+
+        <form method="get" action="{% url 'dashboard_empresa' %}" class="mt-6">
+          <label for="dashboardSearch" class="text-xs font-bold uppercase tracking-[0.3em] text-[#7C3AED]">Busca</label>
+          {% if status_filter %}<input type="hidden" name="status" value="{{ status_filter }}">{% endif %}
+          <div class="mt-3 flex gap-2">
+            <input id="dashboardSearch" name="q" value="{{ search_query }}" type="search" placeholder="Buscar meus serviços" class="min-w-0 flex-1 rounded-2xl border border-[#E9D5FF] bg-white px-4 py-3 text-sm outline-none focus:border-[#7C3AED] focus:ring-4 focus:ring-[#7C3AED]/10">
+            <button type="submit" class="rounded-2xl bg-[#7C3AED] px-4 py-3 text-sm font-bold text-white hover:bg-[#6D28D9]" aria-label="Buscar serviços">Buscar</button>
+          </div>
+          {% if search_query %}
+            <a href="{% url 'dashboard_empresa' %}{% if status_filter %}?status={{ status_filter }}{% endif %}" class="mt-3 inline-flex text-sm font-semibold text-[#7C3AED] hover:text-[#6D28D9]">Limpar busca</a>
+          {% endif %}
+        </form>
+      </div>
+
+      <div class="relative overflow-hidden rounded-[2rem] border border-[#E9D5FF] bg-gradient-to-br from-[#F3E8FF] to-white p-6 shadow-sm">
+        <div class="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[#A855F7]/20 blur-3xl"></div>
+
+        <div class="relative">
+          <p class="text-xs font-bold uppercase tracking-[0.35em] text-[#7C3AED]">Destaque sua empresa</p>
+          <h2 class="mt-4 text-2xl font-bold leading-tight text-slate-900">
+            Publique mais serviços e encontre os melhores freelancers.
+          </h2>
+
+          <div class="mt-6 flex flex-col gap-3">
+            <a href="{% url 'criar_servico' %}" class="rounded-2xl bg-[#7C3AED] px-5 py-3 text-center text-sm font-bold text-white shadow-lg shadow-[#7C3AED]/20 hover:bg-[#6D28D9]">
+              Publicar serviço
+            </a>
+            <button type="button" id="openTipsModal" class="rounded-2xl border border-[#A855F7] bg-white px-5 py-3 text-center text-sm font-bold text-[#7C3AED] hover:bg-[#F3E8FF]">
+              Ver dicas para publicar
+            </button>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div id="tipsModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/50 px-4 py-8" role="dialog" aria-modal="true" aria-labelledby="tipsModalTitle">
+  <div class="max-h-full w-full max-w-2xl overflow-y-auto rounded-[2rem] bg-white p-6 shadow-2xl sm:p-8">
+    <div class="flex items-start justify-between gap-4">
+      <div>
+        <p class="text-xs font-bold uppercase tracking-[0.3em] text-[#7C3AED]">Boas práticas</p>
+        <h2 id="tipsModalTitle" class="mt-3 text-2xl font-bold text-slate-900">Como publicar um serviço atrativo</h2>
+      </div>
+      <button type="button" id="closeTipsModal" class="rounded-full border border-[#E9D5FF] px-4 py-2 text-sm font-bold text-slate-700 hover:bg-[#F3E8FF]" aria-label="Fechar dicas">Fechar</button>
+    </div>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2">
+      <div class="rounded-2xl bg-[#F9F5FF] p-5">
+        <h3 class="font-bold text-slate-900">Use um título direto</h3>
+        <p class="mt-2 text-sm leading-6 text-slate-600">Informe claramente o resultado esperado, como “Desenvolver landing page responsiva”.</p>
+      </div>
+      <div class="rounded-2xl bg-[#F9F5FF] p-5">
+        <h3 class="font-bold text-slate-900">Detalhe o escopo</h3>
+        <p class="mt-2 text-sm leading-6 text-slate-600">Liste entregáveis, requisitos técnicos, referências e o que não faz parte do trabalho.</p>
+      </div>
+      <div class="rounded-2xl bg-[#F9F5FF] p-5">
+        <h3 class="font-bold text-slate-900">Defina prazo e duração</h3>
+        <p class="mt-2 text-sm leading-6 text-slate-600">Datas realistas ajudam o freelancer a avaliar a disponibilidade antes de se candidatar.</p>
+      </div>
+      <div class="rounded-2xl bg-[#F9F5FF] p-5">
+        <h3 class="font-bold text-slate-900">Ofereça um valor coerente</h3>
+        <p class="mt-2 text-sm leading-6 text-slate-600">Considere a complexidade, a experiência necessária e o tempo estimado para execução.</p>
+      </div>
+    </div>
+    <div class="mt-6 flex justify-end">
+      <a href="{% url 'criar_servico' %}" class="rounded-2xl bg-[#7C3AED] px-6 py-3 text-sm font-bold text-white hover:bg-[#6D28D9]">Publicar serviço</a>
+    </div>
+  </div>
+</div>
+
+<div id="cancelModal" class="hidden fixed inset-0 z-50 items-center justify-center bg-[#7C3AED]/10 px-4 py-8">
+  <div class="mx-auto max-w-lg rounded-[2rem] bg-white p-8 shadow-2xl shadow-[#7C3AED]/10">
+    <h3 class="text-xl font-semibold text-slate-900">Confirmar cancelamento</h3>
+    <p class="mt-3 text-slate-700">Tem certeza que deseja cancelar este serviço? Esta ação não pode ser desfeita.</p>
+    <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
+      <button id="cancelModalClose" type="button" class="rounded-full border border-[#E9D5FF] bg-white px-5 py-2 text-sm font-semibold text-slate-900">Fechar</button>
+      <form id="cancelModalForm" method="post" class="w-full sm:w-auto">
+        {% csrf_token %}
+        <button type="submit" class="rounded-full bg-[#7C3AED] px-5 py-2 text-sm font-semibold text-white hover:bg-[#6d28d9]">Confirmar cancelamento</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('cancelModal');
+    const form = document.getElementById('cancelModalForm');
+    const close = document.getElementById('cancelModalClose');
+    const tipsModal = document.getElementById('tipsModal');
+    const openTips = document.getElementById('openTipsModal');
+    const closeTips = document.getElementById('closeTipsModal');
+
+    document.querySelectorAll('.service-row').forEach(row => {
+      const openService = () => {
+        window.location.href = row.dataset.href;
+      };
+
+      row.addEventListener('click', openService);
+      row.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          openService();
+        }
+      });
+    });
+
+    document.querySelectorAll('.cancel-service-button').forEach(button => {
+      button.addEventListener('click', () => {
+        form.action = button.dataset.action;
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      });
+    });
+
+    if (close) {
+      close.addEventListener('click', () => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      });
+    }
+
+    const hideTips = () => {
+      tipsModal.classList.add('hidden');
+      tipsModal.classList.remove('flex');
+      document.body.classList.remove('overflow-hidden');
+    };
+
+    openTips.addEventListener('click', () => {
+      tipsModal.classList.remove('hidden');
+      tipsModal.classList.add('flex');
+      document.body.classList.add('overflow-hidden');
+      closeTips.focus();
+    });
+    closeTips.addEventListener('click', hideTips);
+    tipsModal.addEventListener('click', event => {
+      if (event.target === tipsModal) hideTips();
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && !tipsModal.classList.contains('hidden')) hideTips();
+    });
+  });
+</script>
+{% endblock %}

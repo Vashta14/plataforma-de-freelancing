@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Candidaturas — FreelaHub{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-7xl px-6 py-16 lg:px-8">
+  <h1 class="text-3xl font-bold tracking-tight text-purple-900">Candidaturas para seus serviços</h1>
+  <p class="mt-2 text-purple-700">Veja os freelancers que se candidataram aos seus serviços.</p>
+  
+  {% if candidaturas %}
+    <div class="mt-10 space-y-6">
+      {% for candidatura in candidaturas %}
+        <div class="rounded-3xl border border-purple-200 bg-white p-6 shadow-sm shadow-purple-200/50">
+          <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <div>
+              <h3 class="text-lg font-semibold text-purple-900">{{ candidatura.vaga.nome }}</h3>
+              <p class="mt-2 text-purple-700">Freelancer: <strong>{{ candidatura.freelancer.user.get_full_name|default:candidatura.freelancer.user.username }}</strong></p>
+              <p class="mt-1 text-sm text-purple-600">Status: 
+                <span class="inline-flex rounded-full px-2 py-1 text-xs font-semibold
+                  {% if candidatura.status == 'aceita' %}bg-green-100 text-green-700{% elif candidatura.status == 'pendente' %}bg-yellow-100 text-yellow-700{% else %}bg-red-100 text-red-700{% endif %}
+                ">{{ candidatura.status }}</span>
+              </p>
+            </div>
+            <div class="flex flex-col gap-2">
+              {% if candidatura.vaga.status == 'aberta' and candidatura.status == 'pendente' %}
+                <form method="post" action="{% url 'aceitar_candidatura' candidatura.id %}">{% csrf_token %}
+                  <button type="submit" class="inline-flex items-center justify-center rounded-full bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-500">Aceitar</button>
+                </form>
+                <form method="post" action="{% url 'rejeitar_candidatura' candidatura.id %}">{% csrf_token %}
+                  <button type="submit" class="inline-flex items-center justify-center rounded-full border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-900 hover:bg-red-100">Rejeitar</button>
+                </form>
+              {% endif %}
+              <a href="{% url 'visualizar_perfil_freelancer' candidatura.freelancer.id %}?servico={{ candidatura.vaga.id }}" class="inline-flex items-center justify-center rounded-full border border-purple-200 bg-white px-4 py-2 text-sm font-semibold text-purple-900 hover:bg-purple-50">Ver perfil</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="mt-10 rounded-3xl border border-dashed border-purple-300 bg-purple-50 p-10 text-center text-purple-700">
+      <p class="text-lg font-semibold">Nenhuma candidatura ainda.</p>
+      <p class="mt-2">Quando freelancers se candidatarem aos seus serviços, aparecerão aqui.</p>
+    </div>
+  {% endif %}
+  
+  <a href="{% url 'dashboard_empresa' %}" class="mt-8 inline-flex rounded-full bg-purple-600 px-6 py-2 text-white hover:bg-purple-500">Voltar ao Dashboard</a>
+</div>
+{% endblock %}

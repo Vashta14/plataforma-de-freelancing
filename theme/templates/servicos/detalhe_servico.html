@@ -1,0 +1,251 @@
+{% extends 'base.html' %}
+{% block title %}{{ servico.nome }} — FreelaHub{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-4xl px-6 py-16 lg:px-8">
+  <a href="{% url 'lista_de_servicos' %}" class="text-purple-600 hover:text-purple-900">← Voltar para serviços</a>
+  
+  <div class="mt-8 rounded-3xl border border-purple-200 bg-white p-8 shadow-2xl shadow-purple-200/40">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        <h1 class="text-3xl font-bold tracking-tight text-purple-900">{{ servico.nome }}</h1>
+        <span class="mt-2 inline-flex rounded-full px-3 py-1 text-sm font-semibold uppercase tracking-[0.2em]
+          {% if servico.status == 'aberta' %}bg-green-100 text-green-700{% elif servico.status == 'finalizado' %}bg-slate-100 text-slate-700{% else %}bg-red-100 text-red-700{% endif %}
+        ">{{ servico.status }}</span>
+      </div>
+      <div class="text-right">
+        <p class="text-2xl font-bold text-purple-900">R$ {{ servico.valor_hora }}/h</p>
+        <p class="mt-2 text-purple-700">{{ servico.duracao }}</p>
+      </div>
+    </div>
+    {% if is_empresa_owner %}
+      <div class="mt-4 flex gap-2 justify-end">
+        <a href="{% url 'editar_servico' servico.id %}" class="rounded-full border border-purple-200 bg-white px-4 py-2 text-sm font-semibold text-purple-900">Editar</a>
+        {% if servico.status != 'finalizado' and servico.status != 'cancelada' and accepted_exists %}
+          <button type="button" id="openFinalizeModal" class="rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-900">Finalizar serviço</button>
+        {% endif %}
+        <button id="openCancelModal" class="rounded-full border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-900">Cancelar serviço</button>
+      </div>
+    {% endif %}
+    
+    <div class="mt-8 space-y-6">
+      <div>
+        <h2 class="text-lg font-semibold text-purple-900">Descrição</h2>
+        <p class="mt-2 text-purple-700">{{ servico.descricao }}</p>
+      </div>
+      
+      <div>
+        <h2 class="text-lg font-semibold text-purple-900">Informações</h2>
+        <div class="mt-2 space-y-2 text-purple-700">
+          <p>📅 <strong>Data/Hora:</strong> {{ servico.data_hora|date:'d/m/Y H:i' }}</p>
+          <p>💼 <strong>Empresa:</strong> {{ servico.empresa.user.get_full_name|default:servico.empresa.user.username }}</p>
+        </div>
+      </div>
+      {% if is_empresa_owner %}
+        <div>
+          <h2 class="text-lg font-semibold text-purple-900">Candidaturas</h2>
+          {% if candidaturas %}
+            <div class="mt-4 space-y-4">
+              {% for c in candidaturas %}
+                <div class="rounded-2xl border border-purple-100 bg-purple-50 p-4">
+                  <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                      <div class="font-semibold text-purple-900">{{ c.freelancer.user.get_full_name|default:c.freelancer.user.username }}</div>
+                      <div class="text-sm text-purple-700">{{ c.freelancer.descricao }}</div>
+                      <div class="text-sm text-purple-700">
+                        Telefone: 
+                        {% if c.status == 'aceita' %}
+                          {{ c.freelancer.telefone }}
+                        {% else %}
+                          <span class="text-purple-500">Disponível após aceitar a candidatura</span>
+                        {% endif %}
+                      </div>
+                      <div class="mt-2 text-sm">Status: <strong>{{ c.status }}</strong></div>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                      {% if servico.status == 'aberta' and c.status == 'pendente' %}
+                        <button type="button" class="accept-candidate-button inline-flex items-center justify-center rounded-full bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-500" data-candidatura-id="{{ c.id }}" data-freelancer-name="{{ c.freelancer.user.get_full_name|default:c.freelancer.user.username }}" data-accept-url="{% url 'aceitar_candidatura' '00000000-0000-0000-0000-000000000000' %}">Aceitar candidatura</button>
+                        <button type="button" class="reject-candidate-button inline-flex items-center justify-center rounded-full border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-900 hover:bg-red-100" data-candidatura-id="{{ c.id }}" data-freelancer-name="{{ c.freelancer.user.get_full_name|default:c.freelancer.user.username }}" data-reject-url="{% url 'rejeitar_candidatura' '00000000-0000-0000-0000-000000000000' %}">Rejeitar candidatura</button>
+                      {% endif %}
+                      <a href="{% url 'visualizar_perfil_freelancer' c.freelancer.id %}?servico={{ servico.id }}" class="inline-flex items-center justify-center rounded-full border border-purple-200 bg-white px-4 py-2 text-sm font-semibold text-purple-900">Ver perfil</a>
+                      {% if c.status == 'aceita' %}
+                        <a href="{% url 'avaliar_freelancer' servico.id c.freelancer.id %}" class="inline-flex items-center justify-center rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white">Avaliar freelancer</a>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p class="mt-3 text-sm text-purple-600">Nenhuma candidatura até o momento.</p>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="cancelModal" style="display:none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+  <div class="rounded-2xl bg-white p-6 max-w-lg w-full">
+    <h3 class="text-lg font-semibold text-purple-900">Confirmar cancelamento</h3>
+    <p class="mt-2 text-purple-700">Tem certeza que deseja cancelar este serviço? Esta ação não pode ser desfeita.</p>
+    <div class="mt-4 flex justify-end gap-3">
+      <button id="closeCancelModal" class="rounded-full border px-4 py-2">Fechar</button>
+      <form method="post" action="{% url 'cancelar_servico' servico.id %}">{% csrf_token %}
+        <button type="submit" class="rounded-full bg-red-600 px-4 py-2 text-white">Confirmar cancelamento</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="acceptedModal" data-show="{% if accepted_modal %}1{% else %}0{% endif %}" style="display:none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+  <div class="w-full max-w-xl rounded-3xl bg-white p-8 shadow-xl">
+    <h3 class="text-xl font-semibold text-purple-900">Candidatura aceita!</h3>
+    <p class="mt-3 text-purple-700">A candidatura foi aceita com sucesso. Agora você pode entrar em contato com o freelancer.</p>
+    {% if accepted_modal and accepted_modal.whatsapp_url %}
+      <a href="{{ accepted_modal.whatsapp_url }}" target="_blank" class="mt-6 inline-flex rounded-full bg-green-600 px-5 py-3 text-sm font-semibold text-white hover:bg-green-500">Entrar em contato</a>
+    {% endif %}
+    <button id="closeAcceptedModal" class="mt-4 inline-flex rounded-full border border-purple-200 px-4 py-2 text-sm font-semibold text-purple-900">Fechar</button>
+  </div>
+</div>
+
+<!-- Modal de confirmação - Aceitar Candidatura -->
+<div id="acceptCandidateModal" style="display:none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+  <div class="w-full max-w-lg rounded-3xl bg-white p-8 shadow-xl">
+    <h3 class="text-xl font-semibold text-purple-900">Aceitar candidatura?</h3>
+    <p class="mt-3 text-purple-700">Tem certeza que deseja aceitar a candidatura de <strong id="acceptCandidateName"></strong>?</p>
+    <div class="mt-6 flex gap-3 justify-end">
+      <button id="closeAcceptCandidateModal" class="rounded-full border border-purple-200 px-6 py-2 font-semibold text-purple-900 hover:bg-purple-50">Cancelar</button>
+      <form id="acceptCandidateForm" method="post" style="display:inline;">{% csrf_token %}
+        <button type="submit" class="rounded-full bg-green-600 px-6 py-2 font-semibold text-white hover:bg-green-500">Confirmar</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de confirmação - Rejeitar Candidatura -->
+<div id="rejectCandidateModal" style="display:none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+  <div class="w-full max-w-lg rounded-3xl bg-white p-8 shadow-xl">
+    <h3 class="text-xl font-semibold text-purple-900">Rejeitar candidatura?</h3>
+    <p class="mt-3 text-purple-700">Tem certeza que deseja rejeitar a candidatura de <strong id="rejectCandidateName"></strong>?</p>
+    <div class="mt-6 flex gap-3 justify-end">
+      <button id="closeRejectCandidateModal" class="rounded-full border border-purple-200 px-6 py-2 font-semibold text-purple-900 hover:bg-purple-50">Cancelar</button>
+      <form id="rejectCandidateForm" method="post" style="display:inline;">{% csrf_token %}
+        <button type="submit" class="rounded-full bg-red-600 px-6 py-2 font-semibold text-white hover:bg-red-500">Confirmar</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de confirmação - Finalizar Serviço -->
+<div id="finalizeModal" style="display:none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+  <div class="w-full max-w-lg rounded-3xl bg-white p-8 shadow-xl">
+    <h3 class="text-xl font-semibold text-purple-900">Finalizar serviço?</h3>
+    <p class="mt-3 text-purple-700">Tem certeza que deseja marcar este serviço como finalizado? Esta ação não pode ser desfeita.</p>
+    <div class="mt-6 flex gap-3 justify-end">
+      <button id="closeFinalizeModal" class="rounded-full border border-purple-200 px-6 py-2 font-semibold text-purple-900 hover:bg-purple-50">Cancelar</button>
+      <form id="finalizeForm" method="post" style="display:inline;">{% csrf_token %}
+        <button type="submit" class="rounded-full bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-500">Confirmar</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function(){
+    const open = document.getElementById('openCancelModal');
+    const cancelModal = document.getElementById('cancelModal');
+    const closeCancel = document.getElementById('closeCancelModal');
+    const acceptedModal = document.getElementById('acceptedModal');
+    const closeAccepted = document.getElementById('closeAcceptedModal');
+
+    if (open) { open.addEventListener('click', () => cancelModal.style.display = 'flex'); }
+    if (closeCancel) { closeCancel.addEventListener('click', () => cancelModal.style.display = 'none'); }
+    const showAcceptedModal = acceptedModal?.dataset.show === '1';
+    if (acceptedModal && showAcceptedModal) {
+      acceptedModal.style.display = 'flex';
+      if (window.history && window.history.replaceState) {
+        const url = new URL(window.location.href);
+        url.searchParams.delete('accepted_id');
+        window.history.replaceState({}, '', url.toString());
+      }
+    }
+    if (closeAccepted) { closeAccepted.addEventListener('click', () => acceptedModal.style.display = 'none'); }
+
+    // Aceitar candidatura
+    document.querySelectorAll('.accept-candidate-button').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const candidaturaId = this.dataset.candidaturaId;
+        const freelancerName = this.dataset.freelancerName;
+        const baseUrl = this.dataset.acceptUrl;
+        const modal = document.getElementById('acceptCandidateModal');
+        const nameEl = document.getElementById('acceptCandidateName');
+        const form = document.getElementById('acceptCandidateForm');
+        
+        if (modal && nameEl && form) {
+          nameEl.textContent = freelancerName;
+          form.action = baseUrl.replace('00000000-0000-0000-0000-000000000000', candidaturaId);
+          modal.style.display = 'flex';
+        }
+      });
+    });
+    
+    const closeAcceptBtn = document.getElementById('closeAcceptCandidateModal');
+    if (closeAcceptBtn) {
+      closeAcceptBtn.addEventListener('click', () => {
+        const modal = document.getElementById('acceptCandidateModal');
+        if (modal) modal.style.display = 'none';
+      });
+    }
+
+    // Rejeitar candidatura
+    document.querySelectorAll('.reject-candidate-button').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const candidaturaId = this.dataset.candidaturaId;
+        const freelancerName = this.dataset.freelancerName;
+        const baseUrl = this.dataset.rejectUrl;
+        const modal = document.getElementById('rejectCandidateModal');
+        const nameEl = document.getElementById('rejectCandidateName');
+        const form = document.getElementById('rejectCandidateForm');
+        
+        if (modal && nameEl && form) {
+          nameEl.textContent = freelancerName;
+          form.action = baseUrl.replace('00000000-0000-0000-0000-000000000000', candidaturaId);
+          modal.style.display = 'flex';
+        }
+      });
+    });
+    
+    const closeRejectBtn = document.getElementById('closeRejectCandidateModal');
+    if (closeRejectBtn) {
+      closeRejectBtn.addEventListener('click', () => {
+        const modal = document.getElementById('rejectCandidateModal');
+        if (modal) modal.style.display = 'none';
+      });
+    }
+
+    // Finalizar serviço
+    const finalizeBtn = document.getElementById('openFinalizeModal');
+    if (finalizeBtn) {
+      finalizeBtn.addEventListener('click', function() {
+        const modal = document.getElementById('finalizeModal');
+        const form = document.getElementById('finalizeForm');
+        if (modal && form) {
+          form.action = '{% url "finalizar_servico" servico.id %}';
+          modal.style.display = 'flex';
+        }
+      });
+    }
+    
+    const closeFinalizeBtn = document.getElementById('closeFinalizeModal');
+    if (closeFinalizeBtn) {
+      closeFinalizeBtn.addEventListener('click', () => {
+        const modal = document.getElementById('finalizeModal');
+        if (modal) modal.style.display = 'none';
+      });
+    }
+  });
+</script>
+{% endblock %}

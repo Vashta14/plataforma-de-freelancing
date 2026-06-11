@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Entrar — FreelaHub{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-3xl px-6 py-20 lg:px-8">
+  <div class="overflow-hidden rounded-[2rem] border border-purple-200 bg-white shadow-2xl shadow-purple-200/40">
+    <div class="grid grid-cols-1 gap-0 lg:grid-cols-2">
+      <div class="bg-purple-950 px-8 py-12 text-white sm:px-12 lg:px-14">
+        <h1 class="text-3xl font-bold">Bem-vindo de volta</h1>
+        <p class="mt-4 text-purple-200">Acesse sua conta e continue gerenciando seus serviços ou projetos com agilidade.</p>
+        <div class="mt-10 space-y-3 text-sm text-purple-300">
+          <p>Precisa criar um cadastro? <a href="{% url 'register_generic' %}" class="text-purple-400 underline decoration-purple-700">Faça seu registro</a>.</p>
+          <p>Somos a plataforma para freelancers e empresas crescerem juntas.</p>
+        </div>
+      </div>
+      <div class="px-8 py-12 sm:px-12 lg:px-14">
+        <div class="max-w-md">
+          <h2 class="text-2xl font-semibold text-purple-900">Entrar</h2>
+          <p class="mt-3 text-purple-700">Use seu email e senha para acessar.</p>
+          <form method="post" class="mt-8 space-y-6">
+            {% csrf_token %}
+            <div class="space-y-4">
+              <label class="block text-sm font-medium text-purple-900">Email</label>
+              {{ form.email }}
+              {% if form.email.errors %}<div class="text-sm text-red-600">{{ form.email.errors }}</div>{% endif %}
+            </div>
+            <div class="space-y-4">
+              <label class="block text-sm font-medium text-purple-900">Senha</label>
+              {{ form.password }}
+              {% if form.password.errors %}<div class="text-sm text-red-600">{{ form.password.errors }}</div>{% endif %}
+            </div>
+            {% if form.non_field_errors %}
+              <div class="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{{ form.non_field_errors }}</div>
+            {% endif %}
+            <button type="submit" class="w-full rounded-2xl bg-purple-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-purple-500">Entrar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

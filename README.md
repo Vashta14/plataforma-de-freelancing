@@ -50,7 +50,9 @@ source venv/bin/activate
 ### 4. Instale as dependências
 ```bash
 pip install django 
-pip install django -unfold 
+pip install django-unfold 
+pip install django-tailwind
+pip install django-browser-reload
 ```
 
 ## 🚀 Como Executar
